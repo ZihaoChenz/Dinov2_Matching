@@ -16,7 +16,7 @@ image_type = args.ImageType
 result_folder = args.ResultFolder
 data_folder = args.DataFolder
 
-
+# visualize the UI interface
 def visualize_result(data):
     root = tk.Tk()
     ImageDisplay(root, data, data_folder)
@@ -24,5 +24,6 @@ def visualize_result(data):
 
 
 if __name__ == '__main__':
+    # get the total dict data
     data = compare_similarity(image_type, result_folder)
     visualize_result(data)

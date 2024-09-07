@@ -34,7 +34,7 @@ def save_txt(filename, tensor_data, ref_folder):
             row_str = ' '.join(map(str, row))
             f.write(row_str + '\n')
 
-    print(f"数据已保存到 {os.path.join(filename)}")
+    # print(f"数据已保存到 {os.path.join(filename)}")
 
 def load_txt_to_tensor(filename):
     """

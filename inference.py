@@ -1,10 +1,8 @@
 # Import necessary modules and functions
-from tools.classification import load_data, feature_inference
+from utils.data_process import load_data, feature_inference
 from model import model_process  # Import custom model from model.py file
 import torch
-import torch.nn as nn
 import torch.optim as optim
-from torch.optim.lr_scheduler import ReduceLROnPlateau
 import argparse
 
 def parse_args():
