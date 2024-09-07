@@ -7,15 +7,16 @@ import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import argparse
 
-# def parse_args():
-#     parser = argparse.ArgumentParser(description='parameter')
-#     parser.add_argument('--CheckFolder', help="input check image folder", required=True, type=str)
-#     parser.add_argument('--ReferenceFolder', help="input reference folder", required=True, type=str)
-#     args = parser.parse_args()
-#     return args
-# args = parse_args()
-# check_folder = args.CheckFolder
-# ref_folder = args.ReferenceFolder
+def parse_args():
+    parser = argparse.ArgumentParser(description='parameter')
+    parser.add_argument('--CheckFolder', help="input check image folder", required=True, type=str)
+    parser.add_argument('--ReferenceFolder', help="input reference folder", required=False, type=str, default='output')
+    args = parser.parse_args()
+    return args
+
+args = parse_args()
+check_folder = args.CheckFolder
+ref_folder = args.ReferenceFolder
 
 
 
@@ -25,7 +26,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Use the load_data function from tools.training to load our dataset
 # This function presumably returns a set of data loaders and the number of classes in the dataset
-dataloaders = load_data()
+dataloaders = load_data(check_folder)
 
 # Initialize our classifier model with the number of output classes equal to num_classes
 
@@ -46,4 +47,4 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 # Finally, use the train_model function from tools.training to train our model
 # The model, dataloaders, loss function, optimizer, learning rate scheduler, and device are passed as arguments
-model = feature_inference(model, dataloaders, optimizer, device)
+model = feature_inference(model, dataloaders, optimizer, device, ref_folder)

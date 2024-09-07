@@ -3,14 +3,14 @@ from PIL import Image, ImageTk
 import os
 
 
-base_check_path = '../data/building/check'
-base_ref_path = '../data/building/ref'
 
 # 初始化UI
 class ImageDisplay():
-    def __init__(self, root, data):
+    def __init__(self, root, data, data_folder):
         self.data = data
         self.root = root
+        self.base_check_path = os.path.join(data_folder, 'check')
+        self.base_ref_path = os.path.join(data_folder, 'ref')
         self.root.title("Image Display")
         self.current_index = 0  # 用于跟踪当前展示的key
         self.keys = list(self.data.keys())
@@ -60,7 +60,7 @@ class ImageDisplay():
     def show_image(self):
         # 获取当前主图像的路径
         main_image_filename = self.keys[self.current_index]
-        main_image_path = os.path.join(base_check_path, main_image_filename)
+        main_image_path = os.path.join(self.base_check_path, main_image_filename)
 
         # 显示主图像名称
         self.main_image_name_label.config(text=main_image_filename)
@@ -79,7 +79,7 @@ class ImageDisplay():
         # 显示三张较小图像、对应的数值和图片名
         for i in range(3):
             small_image_filename = value_keys[i]
-            small_image_path = os.path.join(base_ref_path, small_image_filename)
+            small_image_path = os.path.join(self.base_ref_path, small_image_filename)
 
             # 显示图片名
             self.small_image_name_labels[i].config(text=small_image_filename)
@@ -105,20 +105,20 @@ class ImageDisplay():
 
 
 # for testing
-if __name__ == "__main__":
-    # 数据 dictionary
-    data = {
-        'IMG_4287.JPG': {'IMG_4287_bg2.JPG': 0.8959329106295477, 'IMG_4287_bg1.JPG': 0.6955251740003494,
-                         'IMG_4335.JPG': 0.5684624571106598},
-        'IMG_4288.JPG': {'IMG_4287_bg2.JPG': 0.8720613035570646, 'IMG_4287_bg1.JPG': 0.6943158106847359,
-                         'IMG_4335.JPG': 0.6466266633474884},
-        'IMG_4291.JPG': {'IMG_4287_bg2.JPG': 0.735184318812665, 'IMG_4335.JPG': 0.7129120551084809,
-                         'IMG_4287_bg1.JPG': 0.707857540883853},
-        'IMG_4299.JPG': {'IMG_4287_bg2.JPG': 0.7090594189068824, 'IMG_4287_bg1.JPG': 0.6688264696750842,
-                         'IMG_4335.JPG': 0.6280110958045602}
-    }
-    root = tk.Tk()
-    app = ImageDisplay(root, data)
-    root.mainloop()
+# if __name__ == "__main__":
+#     # 数据 dictionary
+#     data = {
+#         'IMG_4287.JPG': {'IMG_4287_bg2.JPG': 0.8959329106295477, 'IMG_4287_bg1.JPG': 0.6955251740003494,
+#                          'IMG_4335.JPG': 0.5684624571106598},
+#         'IMG_4288.JPG': {'IMG_4287_bg2.JPG': 0.8720613035570646, 'IMG_4287_bg1.JPG': 0.6943158106847359,
+#                          'IMG_4335.JPG': 0.6466266633474884},
+#         'IMG_4291.JPG': {'IMG_4287_bg2.JPG': 0.735184318812665, 'IMG_4335.JPG': 0.7129120551084809,
+#                          'IMG_4287_bg1.JPG': 0.707857540883853},
+#         'IMG_4299.JPG': {'IMG_4287_bg2.JPG': 0.7090594189068824, 'IMG_4287_bg1.JPG': 0.6688264696750842,
+#                          'IMG_4335.JPG': 0.6280110958045602}
+#     }
+#     root = tk.Tk()
+#     app = ImageDisplay(root, data)
+#     root.mainloop()
 
 

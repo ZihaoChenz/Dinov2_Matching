@@ -3,9 +3,8 @@ import torch
 import numpy as np
 import chardet
 
-base_folder = 'output'
 
-def save_txt(filename, tensor_data):
+def save_txt(filename, tensor_data, ref_folder):
     """
     将tensor数据保存到txt文件中.
 
@@ -13,13 +12,13 @@ def save_txt(filename, tensor_data):
     filename (str): 保存的文件名（包括路径和扩展名，例如 'data.txt'）。
     tensor_data (torch.Tensor): 要保存的tensor数据。
     """
-    if not os.path.exists(base_folder):
-        os.makedirs(base_folder)
+    if not os.path.exists(ref_folder):
+        os.makedirs(ref_folder)
         print("创建base folder")
-    if not os.path.exists(os.path.join(base_folder,'check')):
-        os.makedirs(os.path.join(base_folder,'check'))
-    if not os.path.exists(os.path.join(base_folder,'ref')):
-        os.makedirs(os.path.join(base_folder, 'ref'))
+    if not os.path.exists(os.path.join(ref_folder,'check')):
+        os.makedirs(os.path.join(ref_folder,'check'))
+    if not os.path.exists(os.path.join(ref_folder,'ref')):
+        os.makedirs(os.path.join(ref_folder, 'ref'))
 
     # 确保传入的是tensor类型
     if not isinstance(tensor_data, torch.Tensor):
@@ -29,13 +28,13 @@ def save_txt(filename, tensor_data):
     numpy_data = tensor_data.cpu().numpy()
 
     # 保存到txt文件中
-    with open(os.path.join(base_folder, filename + ".txt"), 'w') as f:
+    with open(filename + ".txt", 'w') as f:
         for row in numpy_data:
             # 将每一行的数据转为字符串并用空格分隔，然后写入文件
             row_str = ' '.join(map(str, row))
             f.write(row_str + '\n')
 
-    print(f"数据已保存到 {os.path.join(base_folder, filename)}")
+    print(f"数据已保存到 {os.path.join(filename)}")
 
 def load_txt_to_tensor(filename):
     """
@@ -51,7 +50,7 @@ def load_txt_to_tensor(filename):
         raw_data = f.read()
         result = chardet.detect(raw_data)
         encoding = result['encoding']
-        print(f"检测到的文件编码: {encoding}")
+        # print(f"检测到的文件编码: {encoding}")
 
     # 从txt文件中读取数据
     with open(filename, 'r', encoding=encoding) as f:

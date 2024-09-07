@@ -24,7 +24,7 @@ class SubsetWithFilenames(Dataset):
         return image, label, filename
 
 # Define a function for loading and transforming image data
-def load_data():
+def load_data(check_folder):
     # Define transformations: random crop, random flip, convert to tensor, and normalize
     transform = transforms.Compose([
         transforms.RandomResizedCrop(224),  # Resize and crop the image to a 224x224 square
@@ -34,7 +34,7 @@ def load_data():
     ])
 
     # Load the dataset from directory and apply transformations
-    full_dataset = datasets.ImageFolder('data/building', transform)
+    full_dataset = datasets.ImageFolder(check_folder, transform)
     # 获取类别到索引的映射
     class_to_idx = full_dataset.class_to_idx
 
@@ -60,13 +60,13 @@ def load_data():
 
 
 # Define a function to train the model
-def feature_inference(model, dataloaders, optimizer, device):
+def feature_inference(model, dataloaders, optimizer, device, ref_folder):
 
     for phase in ['check', 'ref']:
         if phase == 'check':
-            save_path = 'check'
+            save_path = os.path.join(ref_folder, 'check')
         else:
-            save_path = 'ref'
+            save_path = os.path.join(ref_folder, 'ref')
 
         # Use tqdm for progress bar
         with tqdm(total=len(dataloaders[phase])) as p:
@@ -85,5 +85,5 @@ def feature_inference(model, dataloaders, optimizer, device):
                     # get the dinov2 result
                     outputs = model(inputs)
                     # 将输出的数据保存txt
-                    save_txt(os.path.join(save_path, filename[0].split(".")[0]), outputs)
+                    save_txt(os.path.join(save_path, filename[0].split(".")[0]), outputs, ref_folder)
             print("finish progress")
