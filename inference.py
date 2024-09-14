@@ -1,5 +1,6 @@
 # Import necessary modules and functions
-from utils.data_process import load_data, feature_inference
+from utils.data_process import feature_inference
+from utils.load_data import load_data
 from model import model_process  # Import custom model from model.py file
 import torch
 import torch.optim as optim
@@ -8,7 +9,7 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description='parameter')
     parser.add_argument('--CheckFolder', help="input check image folder", required=True, type=str)
-    parser.add_argument('--ReferenceFolder', help="input reference folder", required=False, type=str, default='output')
+    parser.add_argument('--ReferenceFolder', help="input reference folder", required=False, type=str)
     args = parser.parse_args()
     return args
 
