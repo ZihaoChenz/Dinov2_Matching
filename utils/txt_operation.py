@@ -4,7 +4,7 @@ import numpy as np
 import chardet
 
 
-def save_txt(filename, tensor_data, ref_folder):
+def save_txt(filename, tensor_data, output_folder, process):
     """
     将tensor数据保存到txt文件中.
 
@@ -12,13 +12,14 @@ def save_txt(filename, tensor_data, ref_folder):
     filename (str): 保存的文件名（包括路径和扩展名，例如 'data.txt'）。
     tensor_data (torch.Tensor): 要保存的tensor数据。
     """
-    if not os.path.exists(ref_folder):
-        os.makedirs(ref_folder)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
         print("创建base folder")
-    if not os.path.exists(os.path.join(ref_folder,'check')):
-        os.makedirs(os.path.join(ref_folder,'check'))
-    if not os.path.exists(os.path.join(ref_folder,'ref')):
-        os.makedirs(os.path.join(ref_folder, 'ref'))
+    if process == 'inference':
+        if not os.path.exists(os.path.join(output_folder,'check')):
+            os.makedirs(os.path.join(output_folder,'check'))
+        if not os.path.exists(os.path.join(output_folder,'ref')):
+            os.makedirs(os.path.join(output_folder, 'ref'))
 
     # 确保传入的是tensor类型
     if not isinstance(tensor_data, torch.Tensor):

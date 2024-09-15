@@ -9,13 +9,13 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description='parameter')
     parser.add_argument('--CheckFolder', help="input check image folder", required=True, type=str)
-    parser.add_argument('--ReferenceFolder', help="input reference folder", required=False, type=str)
+    parser.add_argument('--OutputFolder', help="input reference folder", required=False, type=str)
     args = parser.parse_args()
     return args
 
 args = parse_args()
 check_folder = args.CheckFolder
-ref_folder = args.ReferenceFolder
+output_folder = args.OutputFolder
 
 
 
@@ -46,4 +46,4 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 # Finally, use the train_model function from tools.training to train our model
 # The model, dataloaders, loss function, optimizer, learning rate scheduler, and device are passed as arguments
-model = feature_inference(model, dataloaders, optimizer, device, ref_folder)
+model = feature_inference(model, dataloaders, optimizer, device, output_folder)
