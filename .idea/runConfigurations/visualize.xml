@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualize.py" />
-    <option name="PARAMETERS" value="--ImageType jpg --ResultFolder output/surrounding/Cyberport --DataFolder data/surrounding/Cyberport" />
+    <option name="PARAMETERS" value="--ImageType jpg --ResultFolder output/surrounding/HKU-b2-crossroads --DataFolder data/surrounding/HKU-b2-crossroads" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

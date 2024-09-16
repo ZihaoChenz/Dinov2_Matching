@@ -19,7 +19,7 @@ data_folder = args.DataFolder
 # visualize the UI interface
 def visualize_result(data):
     root = tk.Tk()
-    ImageDisplay(root, data, data_folder)
+    ImageDisplay(root, data, data_folder, centroid=False)
     root.mainloop()
 
 

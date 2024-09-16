@@ -6,11 +6,13 @@ import os
 
 # 初始化UI
 class ImageDisplay():
-    def __init__(self, root, data, data_folder):
+    def __init__(self, root, data, data_folder, centroid):
         self.data = data
         self.root = root
-        self.base_check_path = os.path.join(data_folder, 'check')
-        self.base_ref_path = os.path.join(data_folder, 'ref')
+        self.index = centroid
+        if self.index == False:
+            self.base_check_path = os.path.join(data_folder, 'check')
+            self.base_ref_path = os.path.join(data_folder, 'ref')
         self.root.title("Image Display")
         self.current_index = 0  # 用于跟踪当前展示的key
         self.keys = list(self.data.keys())
@@ -58,9 +60,18 @@ class ImageDisplay():
         self.show_image()
 
     def show_image(self):
-        # 获取当前主图像的路径
-        main_image_filename = self.keys[self.current_index]
-        main_image_path = os.path.join(self.base_check_path, main_image_filename)
+        if self.index == False:
+            # 获取当前主图像的路径
+            main_image_filename = self.keys[self.current_index]
+            main_image_path = os.path.join(self.base_check_path, main_image_filename)
+
+        else:
+            # 获取当前主图像的路径
+            main_image_path = self.keys[self.current_index]
+            # 分割路径
+            path_parts = main_image_path.split('/')
+            # 获取倒数第一层路径
+            main_image_filename = path_parts[-1]
 
         # 显示主图像名称
         self.main_image_name_label.config(text=main_image_filename)
@@ -72,17 +83,27 @@ class ImageDisplay():
         self.main_image_label.config(image=main_image_tk)
         self.main_image_label.image = main_image_tk  # 防止垃圾回收
 
-        # 获取当前key的value
-        value_dict = self.data[main_image_filename]
+        if self.index == False:
+            # 获取当前key的value
+            value_dict = self.data[main_image_filename]
+        else:
+            value_dict = self.data[main_image_path]
         value_keys = list(value_dict.keys())
 
         # 显示三张较小图像、对应的数值和图片名
         for i in range(3):
-            small_image_filename = value_keys[i]
-            small_image_path = os.path.join(self.base_ref_path, small_image_filename)
+            if self.index == False:
+                small_image_filename = value_keys[i]
+                small_image_path = os.path.join(self.base_ref_path, small_image_filename)
 
+            else:
+                small_image_path = value_keys[i]
+                path_parts = small_image_path.split('/')
+                small_image_filename = path_parts[-1]
             # 显示图片名
             self.small_image_name_labels[i].config(text=small_image_filename)
+
+
 
             # 显示较小图像
             small_image = Image.open(small_image_path)
@@ -91,8 +112,12 @@ class ImageDisplay():
             self.small_image_labels[i].config(image=small_image_tk)
             self.small_image_labels[i].image = small_image_tk
 
-            # 显示数值
-            self.value_labels[i].config(text=f"{value_dict[small_image_filename]:.4f}")
+            if self.index == False:
+                # 显示数值
+                self.value_labels[i].config(text=f"{value_dict[small_image_filename]:.4f}")
+            else:
+                # 显示数值
+                self.value_labels[i].config(text=f"{value_dict[small_image_path]:.4f}")
 
     def next_image(self):
         # 切换到下一张图片

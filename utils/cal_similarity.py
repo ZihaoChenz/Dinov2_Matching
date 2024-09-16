@@ -1,6 +1,7 @@
 import os
 import torch
 import torch.nn.functional as F
+from pathlib import Path
 from tqdm import tqdm
 from utils.txt_operation import load_txt_to_tensor
 from utils.load_data import load_centroids_data
@@ -51,7 +52,6 @@ def compare_similarity(image_type, result_folder):
         # get top three similarity ref_txt
         top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
         total_dict[c_txt.split('.')[0] + '.' + image_type] = top_three
-    print("Finish Calculating")
     return total_dict
 
 
@@ -64,8 +64,9 @@ def classify_centroids_cls(input_folder, centroids_data_dit):
 
     # compare each input file
     for c_txt in tqdm(check_txt, desc="classify all check file"):
+        check_full_path = os.path.join(check_path, c_txt)
         # get the input txt feature
-        feature_c = load_txt_to_tensor(os.path.join(check_path, c_txt))
+        feature_c = load_txt_to_tensor(check_full_path)
         # Create a dict to record each class similarity value
         cls_similarity_dict = {}
 
@@ -74,12 +75,38 @@ def classify_centroids_cls(input_folder, centroids_data_dit):
             cls_similarity_dict[cls] = compute_similarity(centroids_data_dit[cls], feature_c)
         # Get the max similarity class
         max_similarity_cls = max(cls_similarity_dict, key=cls_similarity_dict.get)
-        file_cls_dict[c_txt] = {max_similarity_cls: cls_similarity_dict[max_similarity_cls]}
-
+        file_cls_dict[check_full_path] = {"class": max_similarity_cls, "class_similarity": cls_similarity_dict[max_similarity_cls], "check_feature": feature_c}
 
     return file_cls_dict
 
+def compare_centroid_similarity(image_type, base_folder, file_cls_dict):
+    total_dict = {}
+    # Calculate each check file
+    for file in file_cls_dict:
+        similarity_dict = {}
+        # Get reference folder path
+        cls_ref_folder = os.path.join(base_folder, file_cls_dict[file]["class"])
+        ref_check_folder = os.path.join(cls_ref_folder, "ref")
+        ref_txt = os.listdir(ref_check_folder)
 
+        # Compute similarity in reference folder
+        for r_txt in tqdm(ref_txt, desc=f'Calculating {file} similarity'):
+            # Get feature of reference file and check file
+            feature_c = file_cls_dict[file]["check_feature"]
+            feature_r = load_txt_to_tensor(os.path.join(ref_check_folder, r_txt))
+
+            # Refactor the ref check path
+            ref_refactor_path = Path(ref_check_folder)
+            # Get the path of the image file corresponding to the txt file
+            txt2image_path = Path(str(os.path.join(ref_refactor_path, r_txt.split('.')[0] + '.' + image_type)).replace('output', 'data')).as_posix()
+            # save the image path and it's similarity
+            similarity_dict[txt2image_path] = compute_similarity(feature_c, feature_r)
+        # Get top three similarity reference image
+        top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
+        # Save the check images, and it's corresponding top three similarity ref images
+        total_dict[Path(str(os.path.join(ref_check_folder, file.split('.')[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
+
+    return total_dict
 
 
 
@@ -91,5 +118,5 @@ if __name__ == '__main__':
     # print(feature_2)
     # similarity = compute_similarity(feature_1, feature_2, method='cosine')
     # print("similarity: ", similarity)
-    centroid_cls_dict = load_centroids_data(r"D:\GitHub_my\Dinov2\Dinov2_Matching\embedding\surrounding", normalize=False)
-    classify_centroids_cls(r"D:\GitHub_my\Dinov2\Dinov2_Matching\output\surrounding\HKU-b1\check", centroid_cls_dict)
+    centroid_cls_dict = load_centroids_data(r"D:\Github-my\Dinov2\Dinov2_Matching\embedding\surrounding", normalize=False)
+    file_cls_dict = classify_centroids_cls(r"D:\Github-my\Dinov2\Dinov2_Matching\output\surrounding\Shek-Tong-Tsui\check", centroid_cls_dict)
