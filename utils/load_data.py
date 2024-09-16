@@ -1,7 +1,10 @@
 import os
 import numpy as np
+import torch
 from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import datasets, transforms
+from pathlib import Path
+
 
 # #自定义数据集包装器
 class SubsetWithFilenames(Dataset):
@@ -52,3 +55,26 @@ def load_data(check_folder):
     ref_loader = DataLoader(ref_with_filenames, batch_size=1, shuffle=False)  # No need to shuffle validation data
 
     return {'check': check_loader, 'ref': ref_loader} # Return loaders and number of classes in the dataset
+
+def load_centroids_data(gallery_data, normalize):
+    # load cls.npy and embeddings.npy data in gallery data path
+    LOAD_PATH = Path(gallery_data)
+    embeddings_gallery = torch.from_numpy(
+        np.load(LOAD_PATH / "embeddings.npy", allow_pickle=True)
+    )
+    paths_gallery = np.load(LOAD_PATH / "cls.npy", allow_pickle=True)
+
+    # Normalize all tensor data if needed
+    if normalize:
+        embeddings_gallery = torch.nn.functional.normalize(
+            embeddings_gallery, dim=1, p=2
+        )
+
+    # Create a dict that maps all class names to their centroid tensors
+    centroid_data_dict = {key: value for key, value in zip(paths_gallery, embeddings_gallery)}
+
+    return centroid_data_dict
+
+# For testing loading data
+if __name__ == '__main__':
+    load_centroids_data(r"D:\GitHub_my\Dinov2\Dinov2_Matching\embedding\surrounding", normalize=False)

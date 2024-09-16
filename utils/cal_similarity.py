@@ -3,6 +3,7 @@ import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 from utils.txt_operation import load_txt_to_tensor
+from utils.load_data import load_centroids_data
 
 
 def compute_similarity(feature1, feature2, method='cosine'):
@@ -54,11 +55,41 @@ def compare_similarity(image_type, result_folder):
     return total_dict
 
 
+# Classify the class that all input file belong through compare input file feature and each class centroid
+def classify_centroids_cls(input_folder, centroids_data_dit):
+    check_path = os.path.join(input_folder)
+    check_txt = os.listdir(check_path)
+
+    file_cls_dict = {}
+
+    # compare each input file
+    for c_txt in tqdm(check_txt, desc="classify all check file"):
+        # get the input txt feature
+        feature_c = load_txt_to_tensor(os.path.join(check_path, c_txt))
+        # Create a dict to record each class similarity value
+        cls_similarity_dict = {}
+
+        for cls in centroids_data_dit:
+            # Compute similarity of all class
+            cls_similarity_dict[cls] = compute_similarity(centroids_data_dit[cls], feature_c)
+        # Get the max similarity class
+        max_similarity_cls = max(cls_similarity_dict, key=cls_similarity_dict.get)
+        file_cls_dict[c_txt] = {max_similarity_cls: cls_similarity_dict[max_similarity_cls]}
+
+
+    return file_cls_dict
+
+
+
+
+
 # for testing
 if __name__ == '__main__':
-    feature_1 = load_txt_to_tensor('D:\\Github_Project\\Downstream-Dinov2\\output\\check\\IMG_4287.txt')
-    feature_2 = load_txt_to_tensor('D:\\Github_Project\\Downstream-Dinov2\\output\\check\\IMG_4288.txt')
-    print(feature_1)
-    print(feature_2)
-    similarity = compute_similarity(feature_1, feature_2, method='cosine')
-    print("similarity: ", similarity)
+    # feature_1 = load_txt_to_tensor('D:\\Github_Project\\Downstream-Dinov2\\output\\check\\IMG_4287.txt')
+    # feature_2 = load_txt_to_tensor('D:\\Github_Project\\Downstream-Dinov2\\output\\check\\IMG_4288.txt')
+    # print(feature_1)
+    # print(feature_2)
+    # similarity = compute_similarity(feature_1, feature_2, method='cosine')
+    # print("similarity: ", similarity)
+    centroid_cls_dict = load_centroids_data(r"D:\GitHub_my\Dinov2\Dinov2_Matching\embedding\surrounding", normalize=False)
+    classify_centroids_cls(r"D:\GitHub_my\Dinov2\Dinov2_Matching\output\surrounding\HKU-b1\check", centroid_cls_dict)

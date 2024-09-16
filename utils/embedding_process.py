@@ -1,9 +1,11 @@
+import argparse
 import os
 from collections import defaultdict
-from txt_operation import load_txt_to_tensor
+from utils.txt_operation import load_txt_to_tensor
 import numpy as np
 from tqdm import tqdm
 from pathlib import Path
+
 
 # get a list contain all file path
 def get_all_file_path(target_folder):
@@ -61,6 +63,8 @@ def embedding_process(result_dict):
     '''
     用的论文中的原代码处理数据，这个处理数据的方式不一定适合（保存数据的格式)
     原文代码使用两个二维的array来保存数据，将所有类别的centroids转换为二维array。
+    要结合原文代码的load embedding的data的function使用
+    在可视化的时候注意数据类型
     '''
     # Use np.vstack to convert the list of centroids for all categories into a 2D array where each row is the centroid vector for a category.
     centroids_arr = np.vstack(np.array(centroids))
@@ -78,7 +82,6 @@ def save_embedding_data(centroids_arr, cls_array, save_path):
     print(f"Saving embeddings and index to {str(SAVE_DIR)}")
     np.save(SAVE_DIR / "embeddings.npy", centroids_arr)
     np.save(SAVE_DIR / "cls.npy", cls_array)
-    return
 
 
 
@@ -90,9 +93,3 @@ def create_embedding(target_folder, save_folder):
     centroids_arr, cls_array = embedding_process(result_dict)
     save_embedding_data(centroids_arr, cls_array, save_folder)
 
-
-
-if __name__ == '__main__':
-    target_folder = r"D:\Github-my\Dinov2\Dinov2_Matching\output"
-    save_folder = r'D:\Github-my\Dinov2\Dinov2_Matching\embedding\surrounding'
-    create_embedding(target_folder, save_folder)

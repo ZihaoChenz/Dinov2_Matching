@@ -9,7 +9,7 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description='parameter')
     parser.add_argument('--CheckFolder', help="input check image folder", required=True, type=str)
-    parser.add_argument('--OutputFolder', help="input reference folder", required=False, type=str)
+    parser.add_argument('--OutputFolder', help="output folder path", required=False, type=str, default="output")
     args = parser.parse_args()
     return args
 
