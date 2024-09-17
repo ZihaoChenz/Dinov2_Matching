@@ -40,9 +40,9 @@ def embedding_process(result_dict):
     centroids = []
     pids_centroids_inds = list(result_dict.keys())
 
+    pbar = tqdm(total=len(result_dict.keys()), desc=f'Calculating class centroid')
     # Calculate the centroid for each category separately
-    for cls in tqdm(result_dict.keys()):
-        tqdm.write(f'Calculating {cls} centroid')
+    for cls in result_dict.keys():
         cls_file = result_dict[cls]
 
         # Temporarily save the tensor data in a list
@@ -60,6 +60,9 @@ def embedding_process(result_dict):
         centroid = np.sum(pids_vecs, 0) / data_length
         # save centroid data to centroids
         centroids.append(centroid)
+        # update pbar
+        pbar.update(1)
+    pbar.close()
     '''
     用的论文中的原代码处理数据，这个处理数据的方式不一定适合（保存数据的格式)
     原文代码使用两个二维的array来保存数据，将所有类别的centroids转换为二维array。

@@ -64,7 +64,7 @@ def classify_centroids_cls(input_folder, centroids_data_dit):
 
     # compare each input file
     for c_txt in tqdm(check_txt, desc="classify all check file"):
-        check_full_path = os.path.join(check_path, c_txt)
+        check_full_path = Path(os.path.join(check_path, c_txt)).as_posix()
         # get the input txt feature
         feature_c = load_txt_to_tensor(check_full_path)
         # Create a dict to record each class similarity value
@@ -104,7 +104,7 @@ def compare_centroid_similarity(image_type, base_folder, file_cls_dict):
         # Get top three similarity reference image
         top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
         # Save the check images, and it's corresponding top three similarity ref images
-        total_dict[Path(str(os.path.join(ref_check_folder, file.split('.')[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
+        total_dict[Path(str((file.split('.')[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
 
     return total_dict
 
