@@ -78,9 +78,10 @@ For example:
 ││ │ │ └──img6.jpg
 
 - Inference data:
-    - python inference.py --CheckFolder data/... --OutputFolder xxx/xxx
+      ```python inference.py --CheckFolder data/... --OutputFolder xxx/xxx```
     - Reference folder default is in output
-    - For example, python inference.py --CheckFolder data/building --OutputFolder output/building
+    - For example
+      ```python inference.py --CheckFolder data/building --OutputFolder output/building```
     - After inference, the file structure will be:
 
 For example:
@@ -130,21 +131,23 @@ For example:
 ││ │ │ └──img6.txt
 
 - Visualize (for normal method):
-    - python visualize.py --ImageType xxx --ResultFolder xxx/xxx --DataFolder xxx/xxx
+      ```python visualize.py --ImageType xxx --ResultFolder xxx/xxx --DataFolder xxx/xxx```
     - xxx is your dataset images type, such as jpg, png, you can through utils.convert_image_format.py to convert your image format
     - You need to select your result folder which is output by inference.
     - Select the data folder path corresponding to the result folder.
-    - For example, python visualize.py --ImageType JPG --ResultFolder output/building/building1 --DataFolder data/building/building1
+    - For example
+      ```python visualize.py --ImageType JPG --ResultFolder output/building/building1 --DataFolder data/building/building1```
 
 1. **Use centorid method to match image**
 - Create Embedding:
-    - python create_embedding.py --Embedding_target_folder xxx/xxx --Embedding_save_folder xxx/xxx
+      ```python create_embedding.py --Embedding_target_folder xxx/xxx --Embedding_save_folder xxx/xxx```
     - Embedding_target_folder is the folder that you want to generate embedding, for example: output/building
     - Embedding_save_folder is the path that save output embedding, for example: embedding/building
 - Visualize (for centroid method):
-    - python --ImageType xxx --GalleryData xxx/xxx --CheckTxtFolder xxx/xxx --OutputBaseFolder xxx/xxx
+      ```python --ImageType xxx --GalleryData xxx/xxx --CheckTxtFolder xxx/xxx --OutputBaseFolder xxx/xxx```
     - GalleryData is the embedding data folder
     - CheckTxtFolder is the txt folder path that you want to check
     - OutputBaseFolder is the folder that the check folder belong to
     - You can choose to normalize the feature by using --Normalize
-    - For example: python --ImageType jpg --GalleryData embedding/surrounding --CheckTxtFolder output/surrounding/Cyberport/check --OutputBaseFolder output/surrounding
+    - For example:
+      ```python --ImageType jpg --GalleryData embedding/surrounding --CheckTxtFolder output/surrounding/Cyberport/check --OutputBaseFolder output/surrounding```
