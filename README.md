@@ -1,9 +1,3 @@
-Here’s a refined and more visually appealing version of your **Dinov2 Location Matching Report** in Markdown format:
-
----
-
-# **Dinov2 Location Matching Report**
-
 ## **1. Introduction**
 
 Dinov2 location matching converts an image into a one-dimensional feature using Dinov2. By calculating the similarity between features, the location information of the image is determined within an object.
@@ -37,6 +31,15 @@ The file structure should be like this:
 │   │   │   │   ├── img4.jpg
 │   │   │   │   ├── img5.jpg
 │   │   │   │   └── img6.jpg
+│   │   ├── south-building
+│   │   │   ├── check
+│   │   │   │   ├── img1.jpg
+│   │   │   │   ├── img2.jpg
+│   │   │   │   └── img3.jpg
+│   │   │   ├── ref
+│   │   │   │   ├── img4.jpg
+│   │   │   │   ├── img5.jpg
+│   │   │   │   └── img6.jpg
 │   ├── surrounding
 │   │   ├── Cyberport
 │   │   │   ├── check
@@ -47,6 +50,16 @@ The file structure should be like this:
 │   │   │   │   ├── img4.jpg
 │   │   │   │   ├── img5.jpg
 │   │   │   │   └── img6.jpg
+│   │   ├── HKU
+│   │   │   ├── check
+│   │   │   │   ├── img1.jpg
+│   │   │   │   ├── img2.jpg
+│   │   │   │   └── img3.jpg
+│   │   │   ├── ref
+│   │   │   │   ├── img4.jpg
+│   │   │   │   ├── img5.jpg
+│   │   │   │   └── img6.jpg
+...
 ```
 
 ---
@@ -68,26 +81,45 @@ python inference.py --CheckFolder data/building --OutputFolder output/building
 After inference, the file structure will look like this:
 
 ```plaintext
-├── data
-│   ├── building
-│   │   ├── check
-│   │   │   ├── img1.jpg
-│   │   │   ├── img2.jpg
-│   │   │   └── img3.jpg
-│   │   ├── ref
-│   │   │   ├── img4.jpg
-│   │   │   ├── img5.jpg
-│   │   │   └── img6.jpg
 ├── output
 │   ├── building
-│   │   ├── check
-│   │   │   ├── img1.txt
-│   │   │   ├── img2.txt
-│   │   │   └── img3.txt
-│   │   ├── ref
-│   │   │   ├── img4.txt
-│   │   │   ├── img5.txt
-│   │   │   └── img6.txt
+│   │   ├── building1
+│   │   │   ├── check
+│   │   │   │   ├── img1.txt
+│   │   │   │   ├── img2.txt
+│   │   │   │   └── img3.txt
+│   │   │   ├── ref
+│   │   │   │   ├── img4.txt
+│   │   │   │   ├── img5.txt
+│   │   │   │   └── img6.txt
+│   │   ├── south-building
+│   │   │   ├── check
+│   │   │   │   ├── img1.txt
+│   │   │   │   ├── img2.txt
+│   │   │   │   └── img3.txt
+│   │   │   ├── ref
+│   │   │   │   ├── img4.txt
+│   │   │   │   ├── img5.txt
+│   │   │   │   └── img6.txt
+│   ├── surrounding
+│   │   ├── Cyberport
+│   │   │   ├── check
+│   │   │   │   ├── img1.txt
+│   │   │   │   ├── img2.txt
+│   │   │   │   └── img3.txt
+│   │   │   ├── ref
+│   │   │   │   ├── img4.txt
+│   │   │   │   ├── img5.txt
+│   │   │   │   └── img6.txt
+│   │   ├── HKU
+│   │   │   ├── check
+│   │   │   │   ├── img1.txt
+│   │   │   │   ├── img2.txt
+│   │   │   │   └── img3.txt
+│   │   │   ├── ref
+│   │   │   │   ├── img4.txt
+│   │   │   │   ├── img5.txt
+│   │   │   │   └── img6.txt
 ```
 
 ---
