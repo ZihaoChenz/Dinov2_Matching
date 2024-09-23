@@ -14,6 +14,7 @@ def parse_args():
     parser.add_argument('--Normalize', help='choose whether normalize each class centroid tensor', action='store_true')
     args = parser.parse_args()
     return args
+
 args = parse_args()
 image_type = args.ImageType
 gallery_data = args.GalleryData

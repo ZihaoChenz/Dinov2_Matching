@@ -34,7 +34,7 @@ def feature_inference(model, dataloaders, optimizer, device, output_folder):
                 # get the dinov2 result
                 outputs = model(inputs)
                 # save the output data as txt file
-                save_txt(os.path.join(save_path, filename[0].split(".")[0]), outputs, output_folder, process='inference')
+                save_txt(os.path.join(save_path, os.path.splitext(filename[0])[0]), outputs, output_folder, process='inference')
             # update pbar
             pbar.update(1)
         pbar.close()

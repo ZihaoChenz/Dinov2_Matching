@@ -48,10 +48,10 @@ def compare_similarity(image_type, result_folder):
             feature_c = load_txt_to_tensor(os.path.join(check_path, c_txt))
             feature_r = load_txt_to_tensor(os.path.join(ref_path, r_txt))
             # compute similarity
-            similarity_dict[r_txt.split('.')[0] + '.' + image_type] = compute_similarity(feature_c, feature_r)
+            similarity_dict[os.path.splitext(r_txt)[0] + '.' + image_type] = compute_similarity(feature_c, feature_r)
         # get top three similarity ref_txt
         top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
-        total_dict[c_txt.split('.')[0] + '.' + image_type] = top_three
+        total_dict[os.path.splitext(c_txt)[0] + '.' + image_type] = top_three
     return total_dict
 
 
@@ -98,13 +98,13 @@ def compare_centroid_similarity(image_type, base_folder, file_cls_dict):
             # Refactor the ref check path
             ref_refactor_path = Path(ref_check_folder)
             # Get the path of the image file corresponding to the txt file
-            txt2image_path = Path(str(os.path.join(ref_refactor_path, r_txt.split('.')[0] + '.' + image_type)).replace('output', 'data')).as_posix()
+            txt2image_path = Path(str(os.path.join(ref_refactor_path, os.path.splitext(r_txt)[0] + '.' + image_type)).replace('output', 'data')).as_posix()
             # save the image path and it's similarity
             similarity_dict[txt2image_path] = compute_similarity(feature_c, feature_r)
         # Get top three similarity reference image
         top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
         # Save the check images, and it's corresponding top three similarity ref images
-        total_dict[Path(str((file.split('.')[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
+        total_dict[Path(str((os.path.splitext(file)[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
 
     return total_dict
 
