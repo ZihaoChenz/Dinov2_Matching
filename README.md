@@ -11,6 +11,11 @@ Dinov2 location matching converts an image into a one-dimensional feature using 
 git clone https://github.com/ZihaoChenz/Dinov2_Matching.git
 ```
 
+### **Install Environment**
+```bash
+pip install -r requirement.txt
+```
+
 ### **Prepare Dataset**
 
 1. Place your **check dataset** in the directory: `data/(building)/check`
