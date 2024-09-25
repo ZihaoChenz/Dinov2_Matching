@@ -4,7 +4,18 @@ Dinov2 location matching converts an image into a one-dimensional feature using 
 
 ---
 
-## **2. Preparation**
+## **2. Prepare Open Source Dataset**
+
+1. Download ZuBuD dataset in https://icu.ee.ethz.ch/research/datsets.html
+2. ```bash
+   python tools/deal_with_ZuBuD.py --src_folder xxx/xxx --dst_folder xxx/xxx
+   ```
+   --src_folder: The path where the dataset folder is located
+   --dst_folder: The path to the processed dataset output, default is data\ZuBuD
+
+---
+
+## **3. Self-Dataset Preparation**
 
 ### **Download Code**
 ```bash
@@ -69,8 +80,15 @@ The file structure should be like this:
 
 ---
 
-## **3. Inference Data**
+## **4. Inference Data**
+If need to inference ZuBuD dataset:
+Run a script to inference ZuBuD
+```bash
+python scripts/inference_ZuBuD.py
+```
+The output results after inference are saved to output/ZuBuD by default.
 
+Else:
 Run the following command to start the inference:
 ```bash
 python inference.py --CheckFolder data/... --OutputFolder xxx/xxx
@@ -129,7 +147,7 @@ After inference, the file structure will look like this:
 
 ---
 
-## **4. Visualization (Normal Method)**
+## **5. Visualization (Normal Method)**
 
 To visualize the results, use the following command:
 ```bash
@@ -148,7 +166,7 @@ python visualize.py --ImageType JPG --ResultFolder output/building/building1 --D
 
 ---
 
-## **5. Centroid Method for Matching**
+## **6. Centroid Method for Matching**
 
 ### **Create Embeddings**
 
