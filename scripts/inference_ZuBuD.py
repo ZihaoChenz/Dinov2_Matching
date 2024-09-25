@@ -29,6 +29,6 @@ def run_inference_ZuBuD(src_folder):
                 print(f"Error processing {object_folder}: {e}")
 
 
-# 使用示例，指定 objectXXXX 文件夹的上一级路径以及输出文件夹路径
-src_folder = r"D:\Github-my\Dinov2\Dinov2_Matching\data\ZuBuD"  # 包含objectXXXX的文件夹路径
+
+src_folder = r"../data/ZuBuD"
 run_inference_ZuBuD(src_folder)

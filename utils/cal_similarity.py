@@ -39,6 +39,7 @@ def compare_similarity(image_type, result_folder):
     # list all txt name
     check_txt = os.listdir(check_path)
     ref_txt = os.listdir(ref_path)
+    total_top3_dict = {}
     total_dict = {}
     # for each check_txt, cal the similarity with all ref_txt
     for c_txt in check_txt:
@@ -49,10 +50,12 @@ def compare_similarity(image_type, result_folder):
             feature_r = load_txt_to_tensor(os.path.join(ref_path, r_txt))
             # compute similarity
             similarity_dict[os.path.splitext(r_txt)[0] + '.' + image_type] = compute_similarity(feature_c, feature_r)
+            total_dict[os.path.splitext(c_txt)[0] + '.' + image_type] = similarity_dict
         # get top three similarity ref_txt
         top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
-        total_dict[os.path.splitext(c_txt)[0] + '.' + image_type] = top_three
-    return total_dict
+        total_top3_dict[os.path.splitext(c_txt)[0] + '.' + image_type] = top_three
+
+    return total_top3_dict, total_dict
 
 
 # Classify the class that all input file belong through compare input file feature and each class centroid

@@ -14,7 +14,6 @@ def save_txt(filename, tensor_data, output_folder, process):
     """
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-        print("创建base folder")
     if process == 'inference':
         if not os.path.exists(os.path.join(output_folder,'check')):
             os.makedirs(os.path.join(output_folder,'check'))
@@ -71,3 +70,12 @@ def load_txt_to_tensor(filename):
     tensor_data = torch.from_numpy(numpy_data)
 
     return tensor_data
+
+def generate_similarity_txt(save_path, total_dict):
+    # 将数据写入txt文件
+    with open(save_path, "w") as file:
+        for key, value in total_dict.items():
+            file.write(f"{key}:\n")
+            for sub_key, sub_value in value.items():
+                file.write(f"    {sub_key}: {sub_value}\n")
+    print("Successfully save similarity")

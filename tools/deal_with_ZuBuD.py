@@ -1,5 +1,14 @@
 import os
 import shutil
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='parameter')
+    parser.add_argument('--src_folder', help="dataset folder", required=True, type=str)
+    parser.add_argument('--dst_folder', help="Output folder", required=True, type=str, default="../data/ZuBuD")
+    args = parser.parse_args()
+    return args
+
 
 
 def organize_images(src_folder, dst_folder):
@@ -65,7 +74,8 @@ def organize_check_and_ref(src_folder):
 
 if __name__ == '__main__':
     # 使用示例，指定图片所在的源文件夹和目标文件夹
-    src_folder = r"D:\Github-my\Dinov2\datasets\png-ZuBuD"
-    dst_folder = r"D:\Github-my\Dinov2\Dinov2_Matching\data\ZuBuD"  # 新的目标文件夹，不影响源文件夹
+    args = parse_args()
+    src_folder = args.src_folder
+    dst_folder = args.dst_folder
     organize_images(src_folder, dst_folder)
     organize_check_and_ref(dst_folder)
