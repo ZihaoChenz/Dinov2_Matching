@@ -83,6 +83,7 @@ def classify_centroids_cls(input_folder, centroids_data_dit):
     return file_cls_dict
 
 def compare_centroid_similarity(image_type, base_folder, file_cls_dict):
+    total_top3_dict = {}
     total_dict = {}
     # Calculate each check file
     for file in file_cls_dict:
@@ -104,12 +105,13 @@ def compare_centroid_similarity(image_type, base_folder, file_cls_dict):
             txt2image_path = Path(str(os.path.join(ref_refactor_path, os.path.splitext(r_txt)[0] + '.' + image_type)).replace('output', 'data')).as_posix()
             # save the image path and it's similarity
             similarity_dict[txt2image_path] = compute_similarity(feature_c, feature_r)
+
         # Get top three similarity reference image
         top_three = dict(sorted(similarity_dict.items(), key=lambda item: item[1], reverse=True)[:3])
         # Save the check images, and it's corresponding top three similarity ref images
-        total_dict[Path(str((os.path.splitext(file)[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
+        total_top3_dict[Path(str((os.path.splitext(file)[0] + '.' + image_type).replace('output', 'data'))).as_posix()] = top_three
 
-    return total_dict
+    return total_top3_dict
 
 
 
