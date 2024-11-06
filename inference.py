@@ -29,10 +29,11 @@ dataloaders = load_data(check_folder)
 
 # Initialize our classifier model with the number of output classes equal to num_classes
 
-model = model_process() # this will load the small model
-# model = model_process(backbone = 'dinov2_b') # to load the base model
-# model = model_process(backbone = 'dinov2_l') # to load the large model
-# model = model_process(backbone = 'dinov2_g') # to load the largest model
+with torch.no_grad():
+    model = model_process() # this will load the small model
+    # model = model_process(backbone = 'dinov2_b') # to load the base model
+    # model = model_process(backbone = 'dinov2_l') # to load the large model
+    # model = model_process(backbone = 'dinov2_g') # to load the largest model
 
 
 # Move the model to the device (GPU or CPU)

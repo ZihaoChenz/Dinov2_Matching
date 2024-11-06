@@ -43,8 +43,8 @@ class model_process(nn.Module):
         # self.head = self.heads[head](self.backbones[backbone]['embedding_size'],num_classes)
 
     def forward(self, x):
-        with torch.no_grad():
-            x = self.backbone(x)
+        # with torch.no_grad():
+        x = self.backbone(x)
         return x
 
 

@@ -75,6 +75,7 @@ def generate_similarity_txt(save_path, total_dict):
     # 将数据写入txt文件
     with open(save_path, "w") as file:
         for key, value in total_dict.items():
+            file.write("Check file: ")
             file.write(f"{key}:\n")
             for sub_key, sub_value in value.items():
                 file.write(f"    {sub_key}: {sub_value}\n")

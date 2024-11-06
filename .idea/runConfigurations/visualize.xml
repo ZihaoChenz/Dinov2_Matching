@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualize.py" />
-    <option name="PARAMETERS" value="--ImageType jpg --ResultFolder output/Urban_Architect_all --DataFolder data/Urban_Architect_all --GenerateTxt $PROJECT_DIR$/../txt/test.txt" />
+    <option name="PARAMETERS" value="--ImageType jpg --ResultFolder output/surrounding/Shek-Tong-Tsui --DataFolder data/surrounding/Shek-Tong-Tsui --GenerateTxt $PROJECT_DIR$/../txt --Eval" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

@@ -2,8 +2,10 @@ import os
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset, Subset
-from torchvision import datasets, transforms
+from torchvision import datasets
+import torchvision.transforms as transforms
 from pathlib import Path
+from PIL import Image
 
 
 # #自定义数据集包装器
@@ -21,6 +23,80 @@ class SubsetWithFilenames(Dataset):
         path, _ = self.dataset.samples[self.subset.indices[idx]]
         filename = os.path.basename(path)  # 获取文件名
         return image, label, filename
+
+
+class QueryPositiveDataset(Dataset):
+    def __init__(self, root_dir, transform=None):
+        """
+        参数：
+        - root_dir：数据集的根目录，例如 ‘dataset/train’
+        - transform：默认不进行数据预处理操作
+        """
+        self.root_dir = root_dir
+        self.transform = transform
+
+        # 查询图像目录
+        self.query_dir = os.path.join(root_dir, 'queries')
+        # 正样本目录
+        self.positive_dir = os.path.join(root_dir, 'positives')
+
+        # 获取所有查询图像的文件名列表
+        self.query_filenames = sorted(os.listdir(self.query_dir))
+
+    def __len__(self):
+        # 查询图像的数量
+        return len(self.query_filenames)
+
+    def __getitem__(self, idx):
+        # 获取每个查询图像的路径
+        query_filename = self.query_filenames[idx]
+        query_path = os.path.join(self.query_dir, query_filename)
+
+        # 加载查询图像
+        query_image = Image.open(query_path).convert('RGB')
+
+        if self.transform:
+            query_image = self.transform(query_image)
+
+        # 根据查询图像的文件名，找到对应的正样本文件夹
+        query_name = os.path.splitext(query_filename)[0]
+        positive_folder = os.path.join(self.positive_dir, query_name)
+
+        # 获取该查询图像对应的所有正样本的图像的文件名
+        positive_filenames = sorted(os.listdir(positive_folder))
+
+        # 加载所有的正样本图像
+        positive_images = []
+        for pos_filename in positive_filenames:
+            pos_path = os.path.join(positive_folder, pos_filename)
+            pos_image = Image.open(pos_path).convert('RGB')
+            if self.transform:
+                pos_image = self.transform(pos_image)
+            positive_images.append(pos_image)
+
+        return query_image, positive_images
+
+
+def custom_collate_fn(batch):
+    """
+    自定义collate_fn函数，将列表的列表转换为张量
+    """
+    queries = []
+    positives = []
+
+    for item in batch:
+        query_image, positive_images = item
+        queries.append(query_image)
+        # 将正样本转换为张量并且放进列表中
+        positives.append(torch.stack(positive_images))
+
+    # 将查询图像转换为张量
+    queries = torch.stack(queries)
+    # 将正样本堆叠成一个张量
+    positives = torch.stack(positives) # 形状为 [batch_size, 4, C, H, W]
+
+    return queries, positives
+
 
 # Define a function for loading and transforming image data
 def load_data(check_folder):
@@ -55,6 +131,27 @@ def load_data(check_folder):
     ref_loader = DataLoader(ref_with_filenames, batch_size=1, shuffle=False)  # No need to shuffle validation data
 
     return {'check': check_loader, 'ref': ref_loader} # Return loaders and number of classes in the dataset
+
+def load_data_train(dataset_root_dir, batch_size):
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),  # 调整图像大小
+        transforms.ToTensor(),  # 转为Tensor格式
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # 图像归一化
+    ])
+
+    # 创建train的dataloader
+    train_path = os.path.join(dataset_root_dir, 'train')
+    train_dataset = QueryPositiveDataset(root_dir=train_path, transform=transform)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=custom_collate_fn)
+
+    # 创建val的dataloader
+    val_path = os.path.join(dataset_root_dir, 'val')
+    val_dataset = QueryPositiveDataset(root_dir=val_path, transform=transform)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, collate_fn=custom_collate_fn)
+
+
+    return train_loader, val_loader
+
 
 def load_centroids_data(gallery_data, normalize):
     # load cls.npy and embeddings.npy data in gallery data path
