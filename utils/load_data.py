@@ -40,6 +40,9 @@ class QueryPositiveDataset(Dataset):
         # 正样本目录
         self.positive_dir = os.path.join(root_dir, 'positives')
 
+        # 负样本目录
+        self.negative_dir = os.path.join(root_dir, 'negatives')
+
         # 获取所有查询图像的文件名列表
         self.query_filenames = sorted(os.listdir(self.query_dir))
 
@@ -61,9 +64,23 @@ class QueryPositiveDataset(Dataset):
         # 根据查询图像的文件名，找到对应的正样本文件夹
         query_name = os.path.splitext(query_filename)[0]
         positive_folder = os.path.join(self.positive_dir, query_name)
+        # 找到对应的负样本文件夹
+        negative_folder = os.path.join(self.negative_dir, query_name)
 
         # 获取该查询图像对应的所有正样本的图像的文件名
         positive_filenames = sorted(os.listdir(positive_folder))
+        # 获取该查询图像对应的所有负样本的图像的文件名
+        negative_filenames = sorted(os.listdir(negative_folder))
+
+
+        # 加载所有的负样本图像
+        negative_image = []
+        for neg_filename in negative_filenames:
+            neg_path = os.path.join(negative_folder, neg_filename)
+            neg_image = Image.open(neg_path).convert('RGB')
+            if self.transform:
+                neg_image = self.transform(neg_image)
+            negative_image.append(neg_image)
 
         # 加载所有的正样本图像
         positive_images = []
@@ -74,7 +91,7 @@ class QueryPositiveDataset(Dataset):
                 pos_image = self.transform(pos_image)
             positive_images.append(pos_image)
 
-        return query_image, positive_images
+        return query_image, positive_images, negative_image
 
 
 def custom_collate_fn(batch):
@@ -83,19 +100,22 @@ def custom_collate_fn(batch):
     """
     queries = []
     positives = []
+    negatives = []
 
     for item in batch:
-        query_image, positive_images = item
+        query_image, positive_images, negative_images = item
         queries.append(query_image)
-        # 将正样本转换为张量并且放进列表中
+        # 将正负样本转换为张量并且放进列表中
         positives.append(torch.stack(positive_images))
+        negatives.append(torch.stack(negative_images))
 
     # 将查询图像转换为张量
     queries = torch.stack(queries)
-    # 将正样本堆叠成一个张量
+    # 将正负样本堆叠成一个张量
     positives = torch.stack(positives) # 形状为 [batch_size, 4, C, H, W]
+    negatives = torch.stack(negatives)
 
-    return queries, positives
+    return queries, positives, negatives
 
 
 # Define a function for loading and transforming image data
