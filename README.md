@@ -4,7 +4,7 @@ Dinov2 location matching converts an image into a one-dimensional feature using 
 
 ---
 
-## **2. Prepare Dataset**
+## **2. Prepare Training Dataset**
 
 ### **Download Online Dataset**
 1. Download CityScapes dataset by https://www.cityscapes-dataset.com/file-handling/?packageID=12
@@ -20,6 +20,28 @@ Dinov2 location matching converts an image into a one-dimensional feature using 
 3. Put the corresponding negative samples for the query images into datasets/(dataset name)/train/negatives and datasets/(dataset name)/val/negatives, such as images that are more than 10 frames apart from the query image in the dataset.
 
 The file structure should be like this:
+
+```plaintext
+├── datasets
+│   ├── cityscapes
+│   │   ├── train
+│   │   │   ├── queries
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit.jpg
+│   │   │   │   ├── stuttgart_00_000000_000009_leftImg8bit.jpg
+│   │   │   ├── positives
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit
+│   │   │   │   │  ├── stuttgart_00_000000_000001_leftImg8bit_stylized_foggy149.jpg
+│   │   │   │   │  ├── stuttgart_00_000000_000001_leftImg8bit_stylized_rain275.jpg
+│   │   │   │   ├── stuttgart_00_000000_000009_leftImg8bit
+│   │   │   │   │  ├── stuttgart_00_000000_000009_leftImg8bit_stylized_foggy149.jpg
+│   │   │   │   │  ├── stuttgart_00_000000_000009_leftImg8bit_stylized_rain275.jpg
+│   │   │   ├── negatives
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit
+│   │   │   │   │  ├── stuttgart_00_000000_000020_leftImg8bit.jpg
+│   │   │   │   │  ├── stuttgart_00_000000_000021_leftImg8bit.jpg
+│   │   │   │   │  ├── ...
+...
+```
 
 
 ## **3. Self-Dataset Preparation**
