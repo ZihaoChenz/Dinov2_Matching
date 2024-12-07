@@ -52,8 +52,14 @@ The file structure should be like this:
 ```
 
 ## **3. Train Model**
-1. train.py --DataFolder datasets/xx --CheckPoints checkpoints/xx --batch_size x --epoch x
-2. For Example: train.py --DataFolder datasets/cityscapes --CheckPoints checkpoints/cityscapes --batch_size 8 --epoch 200
+Run train.py
+```bash
+train.py --DataFolder datasets/xx --CheckPoints checkpoints/xx --batch_size x --epoch x
+```
+For Example:
+```bash
+train.py --DataFolder datasets/cityscapes --CheckPoints checkpoints/cityscapes --batch_size 8 --epoch 200
+```
 
 
 ## **4. Inference Preparation**
@@ -118,7 +124,7 @@ After inference, the file structure will look like this:
 
 ---
 
-## **5. Visualization (Normal Method)**
+## **5. Visualization**
 
 To visualize the results, use the following command:
 ```bash
