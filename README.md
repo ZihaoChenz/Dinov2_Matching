@@ -1,6 +1,8 @@
-## **1. Introduction**
+## **1. Install Environment**
 
-Dinov2 location matching converts an image into a one-dimensional feature using Dinov2. By calculating the similarity between features, the location information of the image is determined within an object.
+```bash
+pip install -r requirement.txt
+```
 
 ---
 
@@ -35,143 +37,83 @@ The file structure should be like this:
 │   │   │   │   ├── stuttgart_00_000000_000009_leftImg8bit
 │   │   │   │   │  ├── stuttgart_00_000000_000009_leftImg8bit_stylized_foggy149.jpg
 │   │   │   │   │  ├── stuttgart_00_000000_000009_leftImg8bit_stylized_rain275.jpg
+│   │   │   │   ├── ...
 │   │   │   ├── negatives
 │   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit
 │   │   │   │   │  ├── stuttgart_00_000000_000020_leftImg8bit.jpg
 │   │   │   │   │  ├── stuttgart_00_000000_000021_leftImg8bit.jpg
 │   │   │   │   │  ├── ...
+│   │   │   │   ├── stuttgart_00_000000_000009_leftImg8bit
+│   │   │   │   │  ├── stuttgart_00_000000_000021_leftImg8bit.jpg
+│   │   │   │   │  ├── stuttgart_00_000000_000022_leftImg8bit.jpg
+│   │   │   │   │  ├── ...
+│   │   │   │   ├── ...
 ...
 ```
 
+## **3. Train Model**
+1. train.py --DataFolder datasets/xx --CheckPoints checkpoints/xx --batch_size x --epoch x
+2. For Example: train.py --DataFolder datasets/cityscapes --CheckPoints checkpoints/cityscapes --batch_size 8 --epoch 200
 
-## **3. Self-Dataset Preparation**
 
-### **Download Code**
-```bash
-git clone https://github.com/ZihaoChenz/Dinov2_Matching.git
-```
+## **4. Inference Preparation**
 
-### **Install Environment**
-```bash
-pip install -r requirement.txt
-```
+### **Prepare Data**
 
-### **Prepare Dataset**
-
-1. Place your **check dataset** in the directory: `data/(building)/check`
-2. Place your **reference dataset** in the directory: `data/(building)/ref`
+1. Place your **check data** in the directory: `data/xx/check`
+2. Place your **reference data** in the directory: `data/xx/ref`
 3. You can rename the building folder as per your requirement.
 
+For example:
 The file structure should be like this:
 
 ```plaintext
 ├── data
-│   ├── building
-│   │   ├── building1
+│   ├── cityscapes
+│   │   ├── sunrise
 │   │   │   ├── check
-│   │   │   │   ├── img1.jpg
-│   │   │   │   ├── img2.jpg
-│   │   │   │   └── img3.jpg
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit.jpg
+│   │   │   │   ├── stuttgart_00_000000_000009_leftImg8bit.jpg
+│   │   │   │   └── ...
 │   │   │   ├── ref
-│   │   │   │   ├── img4.jpg
-│   │   │   │   ├── img5.jpg
-│   │   │   │   └── img6.jpg
-│   │   ├── south-building
-│   │   │   ├── check
-│   │   │   │   ├── img1.jpg
-│   │   │   │   ├── img2.jpg
-│   │   │   │   └── img3.jpg
-│   │   │   ├── ref
-│   │   │   │   ├── img4.jpg
-│   │   │   │   ├── img5.jpg
-│   │   │   │   └── img6.jpg
-│   ├── surrounding
-│   │   ├── Cyberport
-│   │   │   ├── check
-│   │   │   │   ├── img1.jpg
-│   │   │   │   ├── img2.jpg
-│   │   │   │   └── img3.jpg
-│   │   │   ├── ref
-│   │   │   │   ├── img4.jpg
-│   │   │   │   ├── img5.jpg
-│   │   │   │   └── img6.jpg
-│   │   ├── HKU
-│   │   │   ├── check
-│   │   │   │   ├── img1.jpg
-│   │   │   │   ├── img2.jpg
-│   │   │   │   └── img3.jpg
-│   │   │   ├── ref
-│   │   │   │   ├── img4.jpg
-│   │   │   │   ├── img5.jpg
-│   │   │   │   └── img6.jpg
-...
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit.jpg
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit_stylized_sunrise21.jpg
+│   │   │   │   ├── stuttgart_00_000000_000002_leftImg8bit.jpg
+│   │   │   │   ├── stuttgart_00_000000_000002_leftImg8bit_stylized_sunrise21.jpg
+│   │   │   │   └── ...
 ```
 
 ---
 
 ## **4. Inference Data**
-If need to inference ZuBuD dataset:
-Run a script to inference ZuBuD
-```bash
-python scripts/inference_ZuBuD.py
-```
-The output results after inference are saved to output/ZuBuD by default.
-
-Else:
 Run the following command to start the inference:
 ```bash
-python inference.py --CheckFolder data/... --OutputFolder xxx/xxx
+python inference.py --CheckFolder data/... --OutputFolder ouput/xxx
 ```
 - **CheckFolder**: Path to the folder containing the check images
 - **OutputFolder**: Path to save the output
 
 Example:
 ```bash
-python inference.py --CheckFolder data/building --OutputFolder output/building
+python inference.py --CheckFolder data/cityscapes/sunrise --OutputFolder output/cityscapes/sunrise
 ```
 
 After inference, the file structure will look like this:
 
 ```plaintext
 ├── output
-│   ├── building
-│   │   ├── building1
+│   ├── cityscapes
+│   │   ├── sunrise
 │   │   │   ├── check
-│   │   │   │   ├── img1.txt
-│   │   │   │   ├── img2.txt
-│   │   │   │   └── img3.txt
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit.txt
+│   │   │   │   ├── stuttgart_00_000000_000009_leftImg8bit.txt
+│   │   │   │   └── ...
 │   │   │   ├── ref
-│   │   │   │   ├── img4.txt
-│   │   │   │   ├── img5.txt
-│   │   │   │   └── img6.txt
-│   │   ├── south-building
-│   │   │   ├── check
-│   │   │   │   ├── img1.txt
-│   │   │   │   ├── img2.txt
-│   │   │   │   └── img3.txt
-│   │   │   ├── ref
-│   │   │   │   ├── img4.txt
-│   │   │   │   ├── img5.txt
-│   │   │   │   └── img6.txt
-│   ├── surrounding
-│   │   ├── Cyberport
-│   │   │   ├── check
-│   │   │   │   ├── img1.txt
-│   │   │   │   ├── img2.txt
-│   │   │   │   └── img3.txt
-│   │   │   ├── ref
-│   │   │   │   ├── img4.txt
-│   │   │   │   ├── img5.txt
-│   │   │   │   └── img6.txt
-│   │   ├── HKU
-│   │   │   ├── check
-│   │   │   │   ├── img1.txt
-│   │   │   │   ├── img2.txt
-│   │   │   │   └── img3.txt
-│   │   │   ├── ref
-│   │   │   │   ├── img4.txt
-│   │   │   │   ├── img5.txt
-│   │   │   │   └── img6.txt
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit.txt
+│   │   │   │   ├── stuttgart_00_000000_000001_leftImg8bit_stylized_sunrise21.txt
+│   │   │   │   ├── stuttgart_00_000000_000002_leftImg8bit.txt
+│   │   │   │   ├── stuttgart_00_000000_000002_leftImg8bit_stylized_sunrise21.txt
+│   │   │   │   └── ...
 ```
 
 ---
@@ -185,38 +127,14 @@ python visualize.py --ImageType xxx --ResultFolder xxx/xxx --DataFolder xxx/xxx
 - **ImageType**: Image format (e.g., `jpg`, `png`)
 - **ResultFolder**: The folder where the inference results are saved
 - **DataFolder**: The folder containing the original dataset images
+- **GenerateTxtFolder**: Record the similarity between each query image and all other reference (ref) images
 
 You can convert the image format using `utils.convert_image_format.py` if needed.
 
 Example:
 ```bash
-python visualize.py --ImageType JPG --ResultFolder output/building/building1 --DataFolder data/building/building1
+python visualize.py --ImageType JPG --ResultFolder output/cityscapes/sunrise --DataFolder data/cityscapes/sunrise
 ```
 
 ---
 
-## **6. Centroid Method for Matching**
-
-### **Create Embeddings**
-
-To create embeddings, run:
-```bash
-python create_embedding.py --Embedding_target_folder xxx/xxx --Embedding_save_folder xxx/xxx
-```
-- **Embedding_target_folder**: Folder containing data to generate embeddings (e.g., `output/building`)
-- **Embedding_save_folder**: Folder to save the generated embeddings (e.g., `embedding/building`)
-
-### **Visualize (Centroid Method)**
-
-```bash
-python visualize.py --ImageType xxx --GalleryData xxx/xxx --CheckTxtFolder xxx/xxx --OutputBaseFolder xxx/xxx
-```
-- **GalleryData**: Path to the embedding data folder
-- **CheckTxtFolder**: Path to the folder containing check `.txt` files
-- **OutputBaseFolder**: Path to the base folder of the check images
-- Use `--Normalize` to normalize features if necessary
-
-Example:
-```bash
-python visualize.py --ImageType jpg --GalleryData embedding/surrounding --CheckTxtFolder output/surrounding/Cyberport/check --OutputBaseFolder output/surrounding
-```
