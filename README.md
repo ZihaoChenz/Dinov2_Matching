@@ -16,7 +16,7 @@ Dinov2 location matching converts an image into a one-dimensional feature using 
 
 ### **Build Complete Dataset**
 1. Place the images you want to query into `datasets/(dataset name)/train/queries and datasets/(dataset name)/val/queries`.
-2. Place the positive sample set for each corresponding frame image into `datasets/(dataset name)/train/positives`.
+2. Place the positive sample set for each corresponding frame image into `datasets/(dataset name)/train/positives` and `datasets/(dataset name)/val/positives`.
 3. Put the corresponding negative samples for the query images into `datasets/(dataset name)/train/negatives` and `datasets/(dataset name)/val/negatives`, such as images that are more than 10 frames apart from the query image in the dataset.
 
 The file structure should be like this:
