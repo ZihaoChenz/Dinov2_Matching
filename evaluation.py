@@ -39,7 +39,10 @@ def evaluate(eval_dict, top_similarity_num=3, adjacent_frame=4):
     top_similarity_frames = {}
     neighbors_dict = {}
     for check_file, values in eval_dict.items():
-        check_frame_num = int(check_file.split('_')[-1].split('.')[0])
+        # check_frame_num = int(check_file.split('_')[-1].split('.')[0])
+        filename_part = check_file.split('_')[-1]
+        filename_without_ext = os.path.splitext(filename_part)[0]
+        check_frame_num = int(filename_without_ext)
 
         # 计算每个frame的距离并存储
         frame_distances = []

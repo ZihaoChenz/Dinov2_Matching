@@ -122,10 +122,11 @@ def custom_collate_fn(batch):
 def load_data(check_folder):
     # Define transformations: random crop, random flip, convert to tensor, and normalize
     transform = transforms.Compose([
-        transforms.RandomResizedCrop(224),  # Resize and crop the image to a 224x224 square
-        transforms.RandomHorizontalFlip(),  # Randomly flip the image horizontally
+        # transforms.RandomResizedCrop(224),  # Resize and crop the image to a 224x224 square
+        # transforms.RandomHorizontalFlip(),  # Randomly flip the image horizontally
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),  # Convert the image to a tensor
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Normalize the image with mean and standard deviation
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Normalize the image with mean and standard deviation
     ])
 
     # Load the dataset from directory and apply transformations

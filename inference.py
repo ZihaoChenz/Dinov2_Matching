@@ -10,12 +10,14 @@ def parse_args():
     parser = argparse.ArgumentParser(description='parameter')
     parser.add_argument('--CheckFolder', help="input check image folder", required=True, type=str)
     parser.add_argument('--OutputFolder', help="output folder path", required=False, type=str, default="output")
+    parser.add_argument('--model', help="load model", required=False, type=str, default="dinov2")
     args = parser.parse_args()
     return args
 
 args = parse_args()
 check_folder = args.CheckFolder
 output_folder = args.OutputFolder
+train_model = args.model
 
 
 
@@ -30,11 +32,13 @@ dataloaders = load_data(check_folder)
 # Initialize our classifier model with the number of output classes equal to num_classes
 
 with torch.no_grad():
-    model = model_process() # this will load the small model
-    # model = model_process(backbone = 'dinov2_b') # to load the base model
-    # model = model_process(backbone = 'dinov2_l') # to load the large model
-    # model = model_process(backbone = 'dinov2_g') # to load the largest model
-
+    if train_model == 'dinov2':
+        model = model_process() # this will load the small model
+        # model = model_process(backbone = 'dinov2_b') # to load the base model
+        # model = model_process(backbone = 'dinov2_l') # to load the large model
+        # model = model_process(backbone = 'dinov2_g') # to load the largest model
+    else:
+        model = torch.load(train_model)
 
 # Move the model to the device (GPU or CPU)
 model.to(device)

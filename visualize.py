@@ -34,6 +34,8 @@ def visualize_result(data):
 if __name__ == '__main__':
     # get the total dict data
     if txt_save_folder:
+        if not os.path.exists(txt_save_folder):
+            os.makedirs(txt_save_folder, exist_ok=True)
         data, total_dict = compare_similarity(image_type, result_folder)
         txt_save_path = Path(os.path.join(txt_save_folder, os.path.basename(data_folder) + ".txt")).as_posix()
         generate_similarity_txt(txt_save_path, total_dict)

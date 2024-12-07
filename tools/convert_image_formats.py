@@ -33,8 +33,8 @@ def convert_images(input_folder, output_folder, target_format):
 
 if __name__ == '__main__':
     # 示例使用
-    input_folder = r'D:\Github_Project\Downstream-Dinov2\data\building\ref'  # 输入图片文件夹路径
-    output_folder = r'D:\Github_Project\Downstream-Dinov2\data\building\test'  # 输出图片文件夹路径
+    input_folder = r"D:\Github-my\Dinov2\online_datasets\weather_dataset\night"  # 输入图片文件夹路径
+    output_folder = r"D:\Github-my\Dinov2\online_datasets\weather_dataset\night"  # 输出图片文件夹路径
     target_format = 'jpg'  # 目标格式，例如 'jpg', 'png', 等
 
     convert_images(input_folder, output_folder, target_format)
