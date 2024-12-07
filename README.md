@@ -4,16 +4,23 @@ Dinov2 location matching converts an image into a one-dimensional feature using 
 
 ---
 
-## **2. Prepare Open Source Dataset**
+## **2. Prepare Dataset**
 
-1. Download ZuBuD dataset in https://icu.ee.ethz.ch/research/datsets.html
-2. ```bash
-   python tools/deal_with_ZuBuD.py --src_folder xxx/xxx --dst_folder xxx/xxx
-   ```
-   --src_folder: The path where the dataset folder is located
-   --dst_folder: The path to the processed dataset output, default is data\ZuBuD
+### **Download Online Dataset**
+1. Download CityScapes dataset by https://www.cityscapes-dataset.com/file-handling/?packageID=12
+2. Select the whole data or a subset of data as the dataset for the project.
 
----
+### **Prepare Positive Data**
+1. Using projects that can transform photos into different styles and weather conditions to build a positive sample set.
+2. You can use CCPL to generate (https://github.com/JarrentWu1031/CCPL)
+
+### **Build Complete Dataset**
+1. Place the images you want to query into datasets/(dataset name)/train/queries and datasets/(dataset name)/val/queries.
+2. Place the positive sample set for each corresponding frame image into datasets/(dataset name)/train/positives.
+3. Put the corresponding negative samples for the query images into datasets/(dataset name)/train/negatives and datasets/(dataset name)/val/negatives, such as images that are more than 10 frames apart from the query image in the dataset.
+
+The file structure should be like this:
+
 
 ## **3. Self-Dataset Preparation**
 
