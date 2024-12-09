@@ -98,6 +98,7 @@ python inference.py --CheckFolder data/... --OutputFolder ouput/xxx
 ```
 - **CheckFolder**: Path to the folder containing the check images
 - **OutputFolder**: Path to save the output
+- **model**: Path of your own model, default is dinov2 pretrained model
 
 Example:
 ```bash
