@@ -134,7 +134,7 @@ python visualize.py --ImageType xxx --ResultFolder xxx/xxx --DataFolder xxx/xxx
 - **ImageType**: Image format (e.g., `jpg`, `png`)
 - **ResultFolder**: The folder where the inference results are saved
 - **DataFolder**: The folder containing the original dataset images
-- **GenerateTxtFolder**: Record the similarity between each query image and all other reference (ref) images
+- **json**: Record the similarity between each query image and all other reference (ref) images
 
 You can convert the image format using `utils.convert_image_format.py` if needed.
 
@@ -145,3 +145,8 @@ python visualize.py --ImageType JPG --ResultFolder output/cityscapes/sunrise --D
 
 ---
 
+## **5. Evaluation**
+To evaluate the results, use the following command:
+```bash
+python evaluation.py --ImageType xxx --ResultFolder xxx/xxx --DataFolder xxx/xxx
+```
