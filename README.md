@@ -91,7 +91,7 @@ The file structure should be like this:
 
 ---
 
-## **4. Inference Data**
+## **5. Inference Data**
 Run the following command to start the inference:
 ```bash
 python inference.py --CheckFolder data/... --OutputFolder ouput/xxx
@@ -125,7 +125,7 @@ After inference, the file structure will look like this:
 
 ---
 
-## **5. Visualization**
+## **6. Visualization**
 
 To visualize the results, use the following command:
 ```bash
@@ -145,7 +145,7 @@ python visualize.py --ImageType JPG --ResultFolder output/cityscapes/sunrise --D
 
 ---
 
-## **6. Evaluation**
+## **7. Evaluation**
 To evaluate the results, use the following command:
 ```bash
 python evaluation.py --json_path xxx
