@@ -145,8 +145,9 @@ python visualize.py --ImageType JPG --ResultFolder output/cityscapes/sunrise --D
 
 ---
 
-## **5. Evaluation**
+## **6. Evaluation**
 To evaluate the results, use the following command:
 ```bash
-python evaluation.py --ImageType xxx --ResultFolder xxx/xxx --DataFolder xxx/xxx
+python evaluation.py --json_path xxx
 ```
+- **json_path**: The path of json file
