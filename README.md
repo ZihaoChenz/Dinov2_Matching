@@ -1,4 +1,8 @@
-## **1. Install Environment**
+## **1. Download Code and Install Environment**
+
+```bash
+git clone https://github.com/ZihaoChenz/Dinov2_Matching.git
+```
 
 ```bash
 pip install -r requirement.txt
@@ -54,11 +58,11 @@ The file structure should be like this:
 ## **3. Train Model**
 Run train.py
 ```bash
-train.py --DataFolder datasets/xx --CheckPoints checkpoints/xx --batch_size x --epoch x
+train.py --DataFolder datasets/xx --CheckPoints checkpoints/xx --batch_size x --epoch x --config x
 ```
 For Example:
 ```bash
-train.py --DataFolder datasets/cityscapes --CheckPoints checkpoints/cityscapes --batch_size 8 --epoch 200
+train.py --DataFolder datasets/cityscapes --CheckPoints checkpoints/cityscapes --batch_size 8 --epoch 200 --config config/config.yaml
 ```
 
 
@@ -102,7 +106,7 @@ python inference.py --CheckFolder data/... --OutputFolder ouput/xxx
 
 Example:
 ```bash
-python inference.py --CheckFolder data/cityscapes/sunrise --OutputFolder output/cityscapes/sunrise
+python inference.py --CheckFolder data/cityscapes/sunrise --OutputFolder output/cityscapes/sunrise --model [your trained model]
 ```
 
 After inference, the file structure will look like this:
@@ -143,11 +147,3 @@ Example:
 python visualize.py --ImageType JPG --ResultFolder output/cityscapes/sunrise --DataFolder data/cityscapes/sunrise
 ```
 
----
-
-## **7. Evaluation**
-To evaluate the results, use the following command:
-```bash
-python evaluation.py --json_path xxx
-```
-- **json_path**: The path of json file
