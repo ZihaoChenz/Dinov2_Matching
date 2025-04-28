@@ -1,13 +1,15 @@
 import torch
 import os
+import yaml
 import torch.nn as nn
 from torchvision import models
 import argparse
 from model import model_process
 import torch.nn.functional as F
 from ctl.ctl_loss import SupervisedContrastiveLoss
-from ctl.ctl_loss_2024_11_21 import SupervisedContrastiveLoss
-from utils.load_data import load_data_train
+from utils.load_data import load_data_train, load_config
+from utils.result_plot import Plot
+from sklearn.metrics import roc_auc_score
 import matplotlib.pyplot as plt
 
 def parse_args():
@@ -17,6 +19,7 @@ def parse_args():
     parser.add_argument('--batch_size', help='query image number in each batch', required=True, type=int)
     # parser.add_argument('--num_pos', help='the number of positive image of each query image', required=True, type=int)
     parser.add_argument('--epoch', help='number of epoch', required=True, type=int)
+    parser.add_argument('--config', help='config path', required=True)
     args = parser.parse_args()
     return args
 
@@ -28,43 +31,49 @@ if not os.path.exists(checkpoint_folder):
 batch_size = args.batch_size
 # num_pos = args.num_pos
 num_epochs = args.epoch
+config_path = args.config
 
+config = load_config(config_path)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-model = model_process() # this will load the small model
+model = model_process(config['model']['backbone']) # this will load the model
 # model = model_process(backbone = 'dinov2_b') # to load the base model
 # model = model_process(backbone = 'dinov2_l') # to load the large model
 # model = model_process(backbone = 'dinov2_g') # to load the largest model
 
 model.to(device)
 
-# 冻结其他层的参数，只finetune全连接层
+# 冻结其他层的参数，只finetune指定的block
+finetune = config['training']['finetune']
 for name, param in model.named_parameters():
     # param.requires_grad = True
-    # 检查层名是否包含 'fc1' 或 'fc2'，如果包含则将 requires_grad 设为 True，否则设为 False
-    if 'blocks.11' in name or 'blocks.11' in name:
-        param.requires_grad = True
-    else:
-        param.requires_grad = False
+    for finetune_index in finetune:
+        if finetune_index in name:
+            param.requires_grad = True
+        else:
+            param.requires_grad = False
 
 # print(model)
 
 
 # 只更新最后一个block的两个全连接层的参数
-# optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-4)
-optimizer = torch.optim.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-5)
+learning_rate = float(config['training']['learning_rate'])
+optimizer = torch.optim.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate)
 # optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
 # # 打印优化器中的参数
+# optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -4)
 # for group in optimizer.param_groups:
 #     for p in group['params']:
 #         print(p.shape, p.requires_grad)
 
-criterion = SupervisedContrastiveLoss(device=device)
+# 加载temperature数值
+temperature = config['ctl']['temperature']
+criterion = SupervisedContrastiveLoss(device=device, temperature=temperature)
 
-train_loader, val_loader = load_data_train(dataset, batch_size=batch_size)
+train_loader, val_loader = load_data_train(dataset, batch_size=batch_size, config=config)
 
 # 用于记录每个epoch的loss
 # 记录每个epoch的训练和验证损失
@@ -230,7 +239,7 @@ for epoch in range(num_epochs):
           f"Avg Val Pos Similarity: {avg_val_pos_similarity:.4f}",
           f"Avg Val Neg Similarity: {avg_val_neg_similarity:.4f}"
           )
-    if epoch % 10 == 0:
+    if (epoch+1) % 10 == 0:
         model_path = os.path.join(checkpoint_folder, f'model_epoch_{epoch + 1}.pth')
         torch.save(model, model_path)
         print(f"模型已保存：{model_path}")
@@ -247,37 +256,4 @@ for epoch in range(num_epochs):
 # plt.show(savefig="loss_image")
 
 if __name__ == '__main__':
-    # Save all the plots
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, num_epochs + 1), train_losses, label="Train Loss")
-    plt.plot(range(1, num_epochs + 1), val_losses, label="Validation Loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.title("Training and Validation Loss Curve")
-    plt.legend()
-    plt.grid(True)
-    loss_plot_path = os.path.join(checkpoint_folder, "loss_curve.png")
-    plt.savefig(loss_plot_path)
-
-    # Plot similarities
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, num_epochs + 1), train_pos_similarities, label="Avg Train Pos Similarity")
-    plt.plot(range(1, num_epochs + 1), train_neg_similarities, label="Avg Train Neg Similarity")
-    plt.xlabel("Epoch")
-    plt.ylabel("Similarity")
-    plt.title("Training Similarity")
-    plt.legend()
-    plt.grid(True)
-    train_similarity_plot_path = os.path.join(checkpoint_folder, "train_similarity.png")
-    plt.savefig(train_similarity_plot_path)
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, num_epochs + 1), val_pos_similarities, label="Avg Val Pos Similarity")
-    plt.plot(range(1, num_epochs + 1), val_neg_similarities, label="Avg Val Neg Similarity")
-    plt.xlabel("Epoch")
-    plt.ylabel("Similarity")
-    plt.title("Validation Similarity")
-    plt.legend()
-    plt.grid(True)
-    val_similarity_plot_path = os.path.join(checkpoint_folder, "val_similarity.png")
-    plt.savefig(val_similarity_plot_path)
+    Plot(num_epochs, train_losses, val_losses, checkpoint_folder, train_pos_similarities, train_neg_similarities, val_pos_similarities, val_neg_similarities)

@@ -4,3 +4,12 @@ data/
 datasets/
 checkpoints/
 txt_folder/
+visualize_centroid.py
+Evaluation_new.py
+Evaluation_2_9.py
+evaluation.py
+create_embedding.py
+json/
+config/block
+config/neg_mul
+config/temperature

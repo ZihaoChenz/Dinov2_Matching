@@ -1,5 +1,7 @@
 import os
+import yaml
 import numpy as np
+import random
 import torch
 from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import datasets
@@ -26,7 +28,7 @@ class SubsetWithFilenames(Dataset):
 
 
 class QueryPositiveDataset(Dataset):
-    def __init__(self, root_dir, transform=None):
+    def __init__(self, root_dir, neg_mul, transform=None):
         """
         参数：
         - root_dir：数据集的根目录，例如 ‘dataset/train’
@@ -34,6 +36,7 @@ class QueryPositiveDataset(Dataset):
         """
         self.root_dir = root_dir
         self.transform = transform
+        self.neg_mul = neg_mul
 
         # 查询图像目录
         self.query_dir = os.path.join(root_dir, 'queries')
@@ -72,10 +75,19 @@ class QueryPositiveDataset(Dataset):
         # 获取该查询图像对应的所有负样本的图像的文件名
         negative_filenames = sorted(os.listdir(negative_folder))
 
+        # 计算负样本的总数
+        num_images_to_load = len(positive_filenames) * self.neg_mul
+
+        # 如果文件数量少于所需加载的数量，取全部文件
+        if len(negative_filenames) <= num_images_to_load:
+            selected_filenames = negative_filenames
+        else:
+            # 随机选择 num_images_to_load 张图像
+            selected_filenames = random.sample(negative_filenames, num_images_to_load)
 
         # 加载所有的负样本图像
         negative_image = []
-        for neg_filename in negative_filenames:
+        for neg_filename in selected_filenames:
             neg_path = os.path.join(negative_folder, neg_filename)
             neg_image = Image.open(neg_path).convert('RGB')
             if self.transform:
@@ -153,21 +165,22 @@ def load_data(check_folder):
 
     return {'check': check_loader, 'ref': ref_loader} # Return loaders and number of classes in the dataset
 
-def load_data_train(dataset_root_dir, batch_size):
+def load_data_train(dataset_root_dir, batch_size, config):
     transform = transforms.Compose([
-        transforms.Resize((224, 224)),  # 调整图像大小
+        transforms.Resize(eval(config['dataloader']['resize'])),  # 调整图像大小
         transforms.ToTensor(),  # 转为Tensor格式
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # 图像归一化
+        transforms.Normalize(mean=config['dataloader']['normalize']['mean'], std=config['dataloader']['normalize']['std'])  # 图像归一化
     ])
-
+    # 加载负样本是正样本的倍数
+    neg_mul = config['training']['neg_mul']
     # 创建train的dataloader
     train_path = os.path.join(dataset_root_dir, 'train')
-    train_dataset = QueryPositiveDataset(root_dir=train_path, transform=transform)
+    train_dataset = QueryPositiveDataset(root_dir=train_path, transform=transform, neg_mul=neg_mul)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=custom_collate_fn)
 
     # 创建val的dataloader
     val_path = os.path.join(dataset_root_dir, 'val')
-    val_dataset = QueryPositiveDataset(root_dir=val_path, transform=transform)
+    val_dataset = QueryPositiveDataset(root_dir=val_path, transform=transform, neg_mul=neg_mul)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, collate_fn=custom_collate_fn)
 
 
@@ -192,6 +205,12 @@ def load_centroids_data(gallery_data, normalize):
     centroid_data_dict = {key: value for key, value in zip(paths_gallery, embeddings_gallery)}
 
     return centroid_data_dict
+
+def load_config(config_path):
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
+
 
 # For testing loading data
 if __name__ == '__main__':

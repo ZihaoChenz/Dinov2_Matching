@@ -33,7 +33,7 @@ dataloaders = load_data(check_folder)
 
 with torch.no_grad():
     if train_model == 'dinov2':
-        model = model_process() # this will load the small model
+        model = model_process(backbone = 'dinov2_s') # this will load the small model
         # model = model_process(backbone = 'dinov2_b') # to load the base model
         # model = model_process(backbone = 'dinov2_l') # to load the large model
         # model = model_process(backbone = 'dinov2_g') # to load the largest model

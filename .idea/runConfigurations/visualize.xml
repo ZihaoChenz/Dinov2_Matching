@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualize.py" />
-    <option name="PARAMETERS" value="--ImageType jpg --ResultFolder output/cityscape/sunrise_selfmodel_1125 --DataFolder data/cityscape/sunrise --GenerateTxtFolder txt_folder/cityscape/sunrise" />
+    <option name="PARAMETERS" value="--ImageType jpg --ResultFolder output/ablation_learning/cityscape_01/sunrise21/neg_mul/sunrise21_neg_mul_20 --DataFolder data/cityscape_01/sunrise21 --json json/ablation_learning/cityscape_01/sunrise21/neg_mul/sunrise21_neg_mul_20" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

@@ -32,7 +32,7 @@ dino_backbones = {
 
 
 class model_process(nn.Module):
-    def __init__(self, backbone='dinov2_s'):
+    def __init__(self, backbone):
         super(model_process, self).__init__()
         # self.heads = {
         #     'linear':linear_head
@@ -47,4 +47,6 @@ class model_process(nn.Module):
         x = self.backbone(x)
         return x
 
+if __name__ == '__main__':
+    print(model_process())
 
